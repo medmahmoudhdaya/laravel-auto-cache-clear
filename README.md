@@ -84,7 +84,7 @@ When a user is created, updated, or deleted, the cache keys `user:1:details` and
 ### 1. Define the Model
 
 ```php
-#[ClearCacheWhen(['created', 'updated', 'deleted'], cacheKey: 'user:{id}:details', staticKeys: ['users'])]
+#[ClearCacheWhen(['created', 'updated', 'deleted'], staticKeys: ['users'])]
 class User extends Model
 {
     use AutoClearsCache;
@@ -94,15 +94,13 @@ class User extends Model
 ### 2. Cache Data
 
 ```php
-$users = Cache::remember('users', 60, fn () => User::all());
-$user = Cache::remember('user:1:details', 60, fn () => User::find(1));
+$users = Cache::remember('users', 60*60*24, fn () => User::all());
 ```
 
 ### 3. Trigger Model Events
 
 When a user is created, updated, or deleted, the following will be cleared:
 
-- The dynamic key: `user:1:details`
 - The static key: `users`
 
 ---
